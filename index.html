@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="./img/tetris.ico" />
+    <script src="https://kit.fontawesome.com/657de39a82.js" crossorigin="anonymous"></script>
+    <title>Juego Tetris UNL</title>
+</head>
+<body>
+    <div class="container">
+        <canvas id="tetris" width="240" height="400"></canvas>
+
+        <div class="game-data">
+            <div id="score">Puntuacion : 0</div>
+
+            <div class="buttons">
+                <button id="startButton">Iniciar Juego</button>
+                <button id="pauseButton">Pause</button>
+                <button id="stopButton">Parar Juego</button>
+            </div>
+
+            <select name="Level" id="level">
+                <option value="easy">Facil</option>
+                <option value="normal">Normal</option>
+                <option value="hard">Dificil</option>
+            </select>
+
+            <div class="help">
+                <div class="tetris-move">
+                    <h1>Controles :</h1>
+                    <i class="fa-solid fa-arrow-left-long left"></i>
+                    <i class="fa-solid fa-arrow-right-long right"></i>
+                    <i class="fa-solid fa-arrow-down-long down"></i> 
+                </div>
+
+                <div class="rotate">
+                    <h1>Rotacion :</h1>
+                    <p><i class="fa-solid fa-arrow-up-long"></i></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
