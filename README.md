@@ -8,6 +8,12 @@
 
 ![UML.jpeg](UML.jpeg)
 
+# GitHub Page
+
+        https://arianasarango.github.io/Tetris/
+
+
+# Estructura Proyecto
 
 ## Clases Principales
 
