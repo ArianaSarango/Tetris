@@ -1,6 +1,6 @@
 # Juego Tetris
 
-**Integrantes:** Nathaly Camacho, Iván Fernandez, José Riofrío, Ariana Sarango.
+**Integrantes:** Nathaly Camacho, Iván Fernandez, José Riofrío, Ariana Sarango, Carlos Guajala.
 
 **Ciclo:** Segundo "A"
 
