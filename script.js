@@ -1,225 +1,74 @@
-"use strict";
 
-class Tetris {
+//Integrantes: Nathaly Camacho, Iván Fernandez, José Riofrío, Ariana Sarango, Carlos Guajala.
+ 
+
+        //---------------CLASE JUEGO---------------//
+        
+class Juego {
     constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.context = this.canvas.getContext("2d");
-        this.context.scale(20, 20);
-        this.isGameRunning = false;
-        this.isPaused = false;
-        this.dropInterval = this.level();
-        this.lastTime = 0;
-        this.dropCounter = 0;
-        this.animationId = null;
+        this.puntuacion = new Puntuacion();
+        this.dificultad = new Dificultad();
+        this.tablero = new Tablero(canvasId);
+        this.piezaActual = null;
+        this.sonidos = new Sonidos();
+        this.controles = new Controles(this);
 
         this.colors = [
-            null,
-            "#ff0d72",
-            "#0dc2ff",
-            "#0dff72",
-            "#f538ff",
-            "#ff8e0d",
-            "#ffe138",
-            "#3877ff",
-            "#ffffff", // Color para líneas resaltadas
+            null, "#9331FA ", //Morado //Pieza T
+                  "#FFFF00", //Amarillo  //Pieza O
+                  "#FFB600", //Naranja  //Pieza L
+                  "#0800FF", //Azul  //Pieza J
+                  "#00BFFF", //Cyan //Pieza I
+                  "#15F312 ", //Verde  //Pieza S
+                  "#FF0000", //Rojo  //Pieza Z
         ];
-
-        this.arena = this.createMatrix(12, 20);
-        this.player = {
-            pos: { x: 0, y: 0 },
-            matrix: null,
-            score: 0,
-        };
 
         this.backgroundImage = new Image();
         this.backgroundImage.src = './img/fondoTetris.jpg';
-        this.backgroundImage.onload = () => this.drawBackgroundImage();
-
-        // Añadir propiedades para los sonidos
-        this.mainTheme = new Audio('./sounds/TetrisSound.wav');
-        this.lineBreakSound = new Audio('./sounds/LineaBloques.mp3');
-        this.gameOverSound = new Audio('./sounds/GameOver.wav');
-
-        // Configurar la canción principal para que se repita
-        this.mainTheme.loop = true;
-
-        this.initControls();
-        this.initSounds();
-    }
-
-    level() {
-        const selectElement = document.getElementById('level');
-        const selectedValue = selectElement.value;
-        if (selectedValue === 'hard') {
-            return 60;
-        } else if (selectedValue === 'normal') {
-            return 120;
-        } else if (selectedValue === 'easy') {
-            return 250;
-        } else {
-            return 0;
-        }
-    }
-
-    createMatrix(w, h) {
-        const matrix = [];
-        while (h--) {
-            matrix.push(new Array(w).fill(0));
-        }
-        return matrix;
-    }
-
-    createPiece(type) {
-        const pieces = {
-            'I': [[0, 1, 0, 0],
-                  [0, 1, 0, 0],
-                  [0, 1, 0, 0],
-                  [0, 1, 0, 0]],
-
-            'L': [[0, 2, 0],
-                  [0, 2, 0],
-                  [0, 2, 2]],
-
-            'J': [[0, 3, 0],
-                  [0, 3, 0],
-                  [3, 3, 0]],
-
-            'O': [[4, 4],
-                  [4, 4]],
-
-            'Z': [[5, 5, 0],
-                  [0, 5, 5],
-                  [0, 0, 0]],
-
-            'S': [[0, 6, 6],
-                  [6, 6, 0],
-                  [0, 0, 0]],
-
-            'T': [[0, 7, 0],
-                  [7, 7, 7],
-                  [0, 0, 0]]
+        this.backgroundImage.onload = () => {
+            this.tablero.backgroundImage = this.backgroundImage;
+            this.tablero.dibujar(this.piezaActual, this.colors);
         };
-        return pieces[type];
     }
 
-    drawMatrix(matrix, offset) {
-        matrix.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value !== 0) {
-                    this.context.fillStyle = this.colors[value];
-                    this.context.fillRect(x + offset.x, y + offset.y, 1, 1);
-                    this.context.lineJoin = "round";
-                    this.context.strokeStyle = 'black';
-                    this.context.lineWidth = 0.1;
-                    this.context.strokeRect(x + offset.x, y + offset.y, 1, 1);
-                }
-            });
-        });
-    }
-
-    merge(arena, player) {
-        player.matrix.forEach((row, y) => {
-            row.forEach((value, x) => {
-                if (value !== 0) {
-                    arena[y + player.pos.y][x + player.pos.x] = value;
-                }
-            });
-        });
-    }
-
-    rotate(matrix, dir) {
-        for (let y = 0; y < matrix.length; ++y) {
-            for (let x = 0; x < y; ++x) {
-                [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-            }
-        }
-        if (dir > 0) {
-            matrix.forEach((row) => row.reverse());
-        } else {
-            matrix.reverse();
-        }
-    }
-
-    collide(arena, player) {
-        const m = player.matrix;
-        const o = player.pos;
-        for (let y = 0; y < m.length; ++y) {
-            for (let x = 0; x < m[y].length; ++x) {
-                if (m[y][x] !== 0 &&
-                    (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    drawBackgroundImage() {
-        this.context.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
-    }
-
-    initSounds() {
-        // Precargar los sonidos
-        this.mainTheme.load();
-        this.lineBreakSound.load();
-        this.gameOverSound.load();
-    }
-
-    playMainTheme() {
-        this.mainTheme.play();
-    }
-
-    stopMainTheme() {
-        this.mainTheme.pause();
-        this.mainTheme.currentTime = 0;
-    }
-
-    playLineBreakSound() {
-        this.lineBreakSound.play();
-    }
-
-    playGameOverSound() {
-        this.gameOverSound.play();
-    }
-
-    startGame() {
+    iniciar() {
         if (!this.isGameRunning) {
-            this.playerReset();
-            this.updateScore();
+            this.resetear();
+            this.puntuacion.actualizar();
             this.update();
             document.getElementById("pauseButton").disabled = false;
             document.getElementById("startButton").innerText = "Reiniciar";
             this.isGameRunning = true;
         } else {
-            this.player.score = 0;
+            this.puntuacion.reset();        
         }
-        this.playerReset();
-        this.updateScore();
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.arena.forEach((row) => row.fill(0));
-        this.dropInterval = this.level();
-        this.playMainTheme();
+        this.resetear();
+        this.puntuacion.actualizar();
+        this.tablero.limpiarTablero();
+        this.tablero.matriz.forEach(row => row.fill(0));
+        this.dropInterval = this.dificultad.velocidad;
+        this.sonidos.reproducir('principal');
     }
 
-    pauseGame() {
+    pausar() {
         this.isPaused = !this.isPaused;
         if (this.isPaused) {
             cancelAnimationFrame(this.animationId);
             document.getElementById("pauseButton").innerText = "Reanudar";
-            this.mainTheme.pause();
+            this.sonidos.pausar('principal');
         } else {
             this.update();
             document.getElementById("pauseButton").innerText = "Pausar";
-            this.mainTheme.play();
+            this.sonidos.reproducir('principal');
         }
     }
 
-    stopGame() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.arena.forEach((row) => row.fill(0));
-        this.playerReset();
-        this.player.score = 0;
-        this.updateScore();
+    terminar() {
+        this.tablero.limpiarTablero();
+        this.tablero.matriz.forEach(row => row.fill(0));
+        this.resetear();
+        this.puntuacion.reset();
+        this.puntuacion.actualizar();
         document.getElementById("pauseButton").disabled = true;
         this.isGameRunning = false;
         document.getElementById("startButton").innerHTML = "Iniciar Juego";
@@ -227,21 +76,24 @@ class Tetris {
         document.getElementById("pauseButton").disabled = true;
         this.isPaused = false;
         cancelAnimationFrame(this.animationId);
-        this.stopMainTheme();
+        this.sonidos.detener('principal');
     }
 
-    playerReset() {
+    resetear() {
         const pieces = "TJLOSZI";
-        this.player.matrix = this.createPiece(pieces[(pieces.length * Math.random()) | 0]);
-        this.player.pos.y = 0;
-        this.player.pos.x = ((this.arena[0].length / 2) | 0) - ((this.player.matrix[0].length / 2) | 0);
-        if (this.collide(this.arena, this.player)) {
-            this.arena.forEach((row) => row.fill(0));
+        this.piezaActual = new Pieza(pieces[(pieces.length * Math.random()) | 0]);
+        this.piezaActual.posicion.actualizarPosicion(
+            ((this.tablero.matriz[0].length / 2) | 0) - ((this.piezaActual.forma[0].length / 2) | 0),
+            0
+        );
+        if (this.collide()) {
+            this.tablero.matriz.forEach(row => row.fill(0));
+            this.gameOver();
         }
     }
 
-    updateScore() {
-        document.getElementById("score").innerText = "Puntuación: " + this.player.score;
+    collide() {
+        return this.tablero.colision(this.piezaActual);
     }
 
     update(time = 0) {
@@ -252,148 +104,342 @@ class Tetris {
                 this.playerDrop();
             }
             this.lastTime = time;
-            this.draw();
+            this.tablero.dibujar(this.piezaActual, this.colors);
         }
         this.animationId = requestAnimationFrame(this.update.bind(this));
     }
 
-    playerMove(offset) {
-        this.player.pos.x += offset;
-        if (this.collide(this.arena, this.player)) {
-            this.player.pos.x -= offset;
+    mover(offset) {
+        this.piezaActual.mover(offset > 0 ? 'derecha' : 'izquierda');
+        if (this.collide()) {
+            this.piezaActual.mover(offset > 0 ? 'izquierda' : 'derecha');
         }
     }
 
     playerDrop() {
-        this.player.pos.y++;
-        if (this.collide(this.arena, this.player)) {
-            this.player.pos.y--;
-            this.merge(this.arena, this.player);
-            if (this.player.pos.y <= 1) {
-                this.gameOver();
-                return;
+        this.piezaActual.mover('abajo');
+        if (this.collide()) {
+            this.piezaActual.mover('arriba');
+            this.tablero.unirPieza(this.piezaActual);
+            this.resetear();
+            const lineasEliminadas = this.tablero.eliminarFilas();
+            if (lineasEliminadas > 0) {
+                this.sonidos.reproducir('lineaBloques');
+                this.puntuacion.incrementar(lineasEliminadas * 10);
             }
-            this.playerReset();
-            this.arenaSweep();
-            this.updateScore();
+            this.puntuacion.actualizar();
         }
         this.dropCounter = 0;
     }
 
-    gameOver() {
-        this.stopMainTheme();
-        this.playGameOverSound();
-        
-        // Esperar a que el sonido de game over termine antes de mostrar la alerta
-        this.gameOverSound.onended = () => {
-            alert('Juego Terminado! Tu puntuación fue: ' + this.player.score);
-            this.stopGame();
-        };
-    }
-
     playerRotate(dir) {
-        const pos = this.player.pos.x;
+        const pos = this.piezaActual.posicion.x;
         let offset = 1;
-        this.rotate(this.player.matrix, dir);
-        while (this.collide(this.arena, this.player)) {
-            this.player.pos.x += offset;
+        this.piezaActual.rotar(dir);
+        while (this.collide()) {
+            this.piezaActual.posicion.x += offset;
             offset = -(offset + (offset > 0 ? 1 : -1));
-            if (offset > this.player.matrix[0].length) {
-                this.rotate(this.player.matrix, -dir);
-                this.player.pos.x = pos;
+            if (offset > this.piezaActual.forma[0].length) {
+                this.piezaActual.rotar(-dir);
+                this.piezaActual.posicion.x = pos;
                 return;
             }
         }
     }
 
-    async arenaSweep() {
-        let rowCount = 0;
-        let linesToRemove = [];
+    gameOver() {
+        this.sonidos.detener('principal');
+        this.sonidos.reproducir('gameOver');
         
-        outer: for (let y = this.arena.length - 1; y > 0; --y) {
-            for (let x = 0; x < this.arena[y].length; ++x) {
-                if (this.arena[y][x] === 0) {
+        this.sonidos.sonidoGameOver.onended = () => {
+            alert('Juego Terminado! Tu puntuación fue: ' + this.puntuacion.puntos);
+            this.terminar();
+        };
+    }
+}
+
+
+                //---------------CLASE PUNTUACION---------------//
+
+class Puntuacion {
+    constructor() {
+        this.puntos = 0;
+    }
+
+    incrementar(puntos) {
+        this.puntos += puntos;
+    }
+
+    reset() {
+        this.puntos = 0;
+    }
+
+    actualizar() {
+        document.getElementById("score").innerText = "Puntuación: " + this.puntos;
+    }
+}
+
+
+                //---------------CLASE DIFICULTAD---------------//
+
+class Dificultad {
+    constructor() {
+        this.nivel = 'normal';
+        this.velocidad = 200;
+    }
+
+    establecerDificultad(nivel) {
+        this.nivel = nivel;
+        switch (nivel) {
+            case 'easy': this.velocidad = 400; break;
+            case 'normal': this.velocidad = 200; break;
+            case 'hard': this.velocidad = 100; break;
+        }
+    }
+}
+
+
+                //---------------CLASE PIEZA---------------//
+
+class Pieza {
+    constructor(tipo) {
+        this.forma = this.crearPieza(tipo);
+        this.posicion = new Posicion(0, 0);
+    }
+
+    crearPieza(type) {
+        const pieces = {
+            'T': [[0, 0, 0],
+                  [1, 1, 1],
+                  [0, 1, 0]],
+
+            'O': [[2, 2],
+                  [2, 2]],
+
+            'L': [[0, 3, 0],
+                  [0, 3, 0],
+                  [0, 3, 3]],
+
+            'J': [[0, 4, 0],
+                  [0, 4, 0],
+                  [4, 4, 0]],
+
+            'I': [[0, 5, 0, 0],
+                  [0, 5, 0, 0],
+                  [0, 5, 0, 0],
+                  [0, 5, 0, 0]],
+
+            'S': [[0, 6, 6],
+                  [6, 6, 0],
+                  [0, 0, 0]],
+
+            'Z': [[7, 7, 0],
+                  [0, 7, 7],
+                  [0, 0, 0]]
+        };
+
+        return pieces[type];
+    }
+
+    mover(direccion) {
+        switch (direccion) {
+            case 'izquierda': this.posicion.x--; break;
+            case 'derecha': this.posicion.x++; break;
+            case 'abajo': this.posicion.y++; break;
+            case 'arriba': this.posicion.y--; break;
+        }
+    }
+
+    rotar(dir) {
+        for (let y = 0; y < this.forma.length; ++y) {
+            for (let x = 0; x < y; ++x) {
+                [this.forma[x][y], this.forma[y][x]] = [this.forma[y][x], this.forma[x][y]];
+            }
+        }
+        if (dir > 0) this.forma.forEach(row => row.reverse());
+        else this.forma.reverse();
+    }
+}
+
+
+                //---------------CLASE POSICION---------------//
+
+class Posicion {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    actualizarPosicion(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+
+                //---------------CLASE TABLERO---------------//
+
+class Tablero {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.context = this.canvas.getContext("2d");
+        this.context.scale(20, 20);
+        this.matriz = this.crearMatriz(12, 20);
+        this.backgroundImage = null;
+    }
+
+    crearMatriz(w, h) {
+        const matrix = [];
+        while (h--) matrix.push(new Array(w).fill(0));
+        return matrix;
+    }
+
+    dibujar(pieza, colors) {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.dibujarFondo();
+        this.drawMatrix(this.matriz, {x: 0, y: 0}, colors);
+        if (pieza) {
+            this.drawMatrix(pieza.forma, pieza.posicion, colors);
+        }
+    }
+
+    dibujarFondo() {
+        if (this.backgroundImage) {
+            this.context.drawImage(this.backgroundImage, 0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+
+    drawMatrix(matrix, offset, colors) {
+        matrix.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value !== 0) {
+                    this.context.fillStyle = colors[value];
+                    this.context.fillRect(x + offset.x, y + offset.y, 1, 1);
+                    this.context.strokeStyle = 'black';
+                    this.context.lineWidth = 0.1;
+                    this.context.strokeRect(x + offset.x, y + offset.y, 1, 1);
+                }
+            });
+        });
+    }
+
+    limpiarTablero() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    unirPieza(pieza) {
+        pieza.forma.forEach((row, y) => {
+            row.forEach((value, x) => {
+                if (value !== 0) {
+                    this.matriz[y + pieza.posicion.y][x + pieza.posicion.x] = value;
+                }
+            });
+        });
+    }
+
+    colision(pieza) {
+        const m = pieza.forma;
+        const o = pieza.posicion;
+        for (let y = 0; y < m.length; ++y) {
+            for (let x = 0; x < m[y].length; ++x) {
+                if (m[y][x] !== 0 &&
+                   (this.matriz[y + o.y] &&
+                    this.matriz[y + o.y][x + o.x]) !== 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    eliminarFilas() {
+        let lineasEliminadas = 0;
+        outer: for (let y = this.matriz.length - 1; y >0; --y) {
+            for (let x = 0; x < this.matriz[y].length; ++x) {
+                if (this.matriz[y][x] === 0) {
                     continue outer;
                 }
             }
-            linesToRemove.push(y);
-            rowCount++;
+            const row = this.matriz.splice(y, 1)[0].fill(0);
+            this.matriz.unshift(row);
+            ++y;
+            lineasEliminadas++;
         }
-        
-        if (rowCount > 0) {
-            // Reproducir el sonido
-            this.playLineBreakSound();
-            
-            // Resaltar las líneas que se van a eliminar con efecto de parpadeo
-            await this.highlightLines(linesToRemove);
-            
-            // Eliminar las líneas
-            linesToRemove.forEach(y => {
-                this.arena.splice(y, 1);
-                this.arena.unshift(new Array(this.arena[0].length).fill(0));
-            });
-            
-            // Actualizar la puntuación
-            this.player.score += this.calculateScore(rowCount);
-            this.updateScore();
-        }
+        return lineasEliminadas;
+    }
+}
+
+
+                //---------------CLASE CONTROLES---------------//
+
+class Controles {
+    constructor(juego) {
+        this.juego = juego;
+        this.pulsarTeclas();
     }
 
-    async highlightLines(lines) {
-        const originalColors = lines.map(y => [...this.arena[y]]);
-        const flashCount = 3;
-        const flashDuration = 100; // milisegundos
-
-        for (let i = 0; i < flashCount; i++) {
-            // Cambiar a color brillante
-            lines.forEach(y => {
-                for (let x = 0; x < this.arena[y].length; ++x) {
-                    this.arena[y][x] = 8; // Color brillante
+    pulsarTeclas() {
+        document.addEventListener('keydown', event => {
+            if (!this.juego.isPaused && this.juego.isGameRunning) {
+                switch (event.keyCode) {
+                    case 37: this.juego.mover(-1); break;
+                    case 39: this.juego.mover(1); break;
+                    case 40: this.juego.playerDrop(); break;
+                    case 38: this.juego.playerRotate(1); break;
                 }
-            });
-            this.draw();
-            await new Promise(resolve => setTimeout(resolve, flashDuration));
-
-            // Volver al color original
-            lines.forEach((y, index) => {
-                this.arena[y] = [...originalColors[index]];
-            });
-            this.draw();
-            await new Promise(resolve => setTimeout(resolve, flashDuration));
-        }
-    }
-
-    calculateScore(rowCount) {
-        // Cada línea vale 10 puntos
-        return rowCount * 10;
-    }
-
-    draw() {
-        this.drawBackgroundImage();
-        this.drawMatrix(this.arena, { x: 0, y: 0 });
-        this.drawMatrix(this.player.matrix, this.player.pos);
-    }
-
-    initControls() {
-        document.addEventListener("keydown", (event) => {
-            if (event.keyCode === 37) {
-                this.playerMove(-1);
-            } else if (event.keyCode === 39) {
-                this.playerMove(1);
-            } else if (event.keyCode === 40) {
-                this.playerDrop();
-            } else if (event.keyCode === 38) {
-                this.playerRotate(1);
-            } else if (event.keyCode === 81) {
-                this.playerRo1tate(-1);
             }
         });
 
-        document.getElementById("startButton").addEventListener("click", () => this.startGame());
-        document.getElementById("pauseButton").addEventListener("click", () => this.pauseGame());
-        document.getElementById("stopButton").addEventListener("click", () => this.stopGame());
+        document.getElementById("startButton").addEventListener("click", () => this.juego.iniciar());
+        document.getElementById("pauseButton").addEventListener("click", () => this.juego.pausar());
+        document.getElementById("stopButton").addEventListener("click", () => this.juego.terminar());
+        document.getElementById("level").addEventListener("change", (e) => {
+            this.juego.dificultad.establecerDificultad(e.target.value);
+            if (this.juego.isGameRunning) {
+                this.juego.dropInterval = this.juego.dificultad.velocidad;
+            }
+        });
+    }
+}
+
+
+                //---------------CLASE SONIDOS---------------//
+
+class Sonidos {
+    constructor() {
+        this.sonidoPrincipal = new Audio('./sounds/TetrisSound.wav');
+        this.sonidoLineaBloquesRotos = new Audio('./sounds/LineaBloques.mp3');
+        this.sonidoGameOver = new Audio('./sounds/GameOver.wav');
+        
+        this.sonidoPrincipal.loop = true;
+        this.cargarSonidos();
+    }
+
+    cargarSonidos() {
+        this.sonidoPrincipal.load();
+        this.sonidoLineaBloquesRotos.load();
+        this.sonidoGameOver.load();
+    }
+
+    reproducir(sonido) {
+        switch(sonido) {
+            case 'principal': this.sonidoPrincipal.play(); break;
+            case 'lineaBloques': this.sonidoLineaBloquesRotos.play(); break;
+            case 'gameOver': this.sonidoGameOver.play(); break;
+        }
+    }
+
+    pausar(sonido) {
+        if (sonido === 'principal') this.sonidoPrincipal.pause();
+    }
+
+    detener(sonido) {
+        if (sonido === 'principal') {
+            this.sonidoPrincipal.pause();
+            this.sonidoPrincipal.currentTime = 0;
+        }
     }
 }
 
 // Inicializar el juego
-const tetris = new Tetris("tetris");
+const tetris = new Juego("tetris");
