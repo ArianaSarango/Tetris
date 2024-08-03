@@ -12,6 +12,33 @@
 
         https://arianasarango.github.io/Tetris/
 
+# Instrucciones De Juego
+
+- Una vez haya ingresado al juego mediante el link debe elegir un nivel (FACIL, NORMAL, DIFICIL) o dejarlo por defecto
+
+- Una vez elegido el nivel debe darle clic en el botón "Iniciar Juego"
+
+- Se creara una pieza de manera aleatoria 
+
+- Al estar seguro la posición en la que quiere que empiece el juego debe presionar la flecha hacia abajo del teclado, en caso contrario debe posicionar la pieza en un lugar del tablero usando las flechas hacia la derecha o izquierda y para cambiar la dirección de la pieza con la tecla hacia arriba, al estar seguro presionar la flecha hacia abajo del teclado y la pieza empezara a caer
+
+- Si no le gusta la pieza con la que sale al comienzo puede dar clic en el botón de "Reiniciar" para que le aparezca una nueva pieza
+
+- Puede presionar los botones de "Pausar" para congelar las piezas en el lugar en donde estén, y "Reanudar" para continuar jugando
+
+- En caso de que quiera terminar el juego puede darle clic en el botón de "Parar Juego"
+
+- Para seguir controlando la posición y dirección de las piezas use las flechas del teclado mientras la pieza esta cayendo
+
+- Colocar las piezas de manera que encajen una con otras para completar una fila de piezas e irlas eliminando
+
+- Por cada fila eliminada ganara 10 puntos y se irán sumando 10 mas a su puntuación según la cantidad de filas eliminadas en total
+
+- El juego terminara cuando las piezas choquen con el borde superior del tablero y no se pueda colocar mas
+
+- Una vez el juego terminado saldrá una alerta en pantalla diciéndole su puntuación que obtuvo
+
+	 Disfruta el juego y trata de obtener la mejor puntuación. ¡Buena Suerte!
 
 # Estructura Proyecto
 
