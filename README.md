@@ -5,7 +5,7 @@
 **Ciclo:** Segundo "A"
 
 # Diagrama UML 
-![image](https://github.com/user-attachments/assets/03c8e425-3fdd-43cd-846d-67968008176c)
+![image](https://github.com/user-attachments/assets/d8ba2ece-c5c4-40f0-a1e9-5a7568ae4a77)
 
 # GitHub Page
 
