@@ -39,105 +39,101 @@
 
 	 Disfruta el juego y trata de obtener la mejor puntuación. ¡Buena Suerte!
 
+
 # Estructura Proyecto
 
-## Clases Principales
+## 1. Juego
 
-### 1. Jugador
+Es la clase principal que controla el flujo del juego, maneja la puntuación, el nivel de dificultad, el tablero, las piezas, los sonidos y los controles.
+## Atributos:
+        puntuacion: Controla los puntos acumulados durante el juego.
+        dificultad: Define el nivel de dificultad actual.
+        tablero: Representa la matriz de juego donde caen las piezas.
+        pieza: Representa la pieza actual en el juego.
+        sonidos: Controla los efectos de sonido del juego.
+        controles: Maneja la entrada del usuario.
+## Métodos:
+        iniciar(): Inicia el juego.
+        pausar(): Pausa el juego.
+        parar(): Detiene el juego.
+        resetear(): Reinicia el juego.
+        mover(): Mueve la pieza actual en el tablero.
+        gameOver(): Maneja el final del juego.
+	
+ 
+## 2. Dificultad
 
-Representa al jugador del juego.
+Esta clase representa los diferentes niveles de dificultad del juego, define la velocidad a la que caen las piezas y el nivel de dificultad actual.
+## Atributos:
+        nivel: Indica el nivel de dificultad (por ejemplo:"FÁCIL", "NORMAL", "DIFÍCIL").
+        velocidad: Representa la velocidad en la que caen las piezas.
+## Métodos:
+        establecerDificultad(): Configura el nivel de dificultad y la velocidad correspondiente.
+	
 
-**Métodos:**
-        
-- realizarMovimientos(): Permite al jugador realizar movimientos en el juego.
+## 3. Controles
 
-### 2. Tetris
+Esta clase se encarga de controlar la interacción del jugador con el juego mediante las teclas.
+## Atributos:
+        juego: Para acceder al estado del juego.
+## Métodos:
+        pulsarTeclas(): Detecta y maneja las teclas presionadas por el jugador para mover y rotar las piezas.
 
-Controla la lógica principal del juego Tetris.
-    
-**Atributos:** 
-- Tablero: Referencia al objeto Tablero asociado. 
-- piezaActual: La pieza que está actualmente en juego. 
-- puntuacion: Puntuación actual del juego.
+ 
+## 4. Tablero
 
-**Métodos:**
-- iniciar(): Inicia el juego. 
-- pausar(): Pausa el juego.
-- pararJuego(): Detiene el juego.
+Representa la matriz de juego donde caen las piezas, controla la creación de la matriz, el dibujo de piezas y la eliminación de filas completas.
+## Atributos:
+        matriz: Una cadena que representa la disposición actual de las piezas en el tablero.
+## Métodos:
+        crearMatriz(): Crea y devuelve una matriz vacía.
+        dibujarPieza(pieza: Pieza): Dibuja la pieza actual en la matriz.
+        limpiarTablero(): Limpia la matriz del tablero.
+        unirPiezas(pieza: Pieza): Une la pieza actual con las piezas ya colocadas en el tablero.
+        eliminarFilas(): Elimina las filas completas de la matriz y ajusta la puntuación.
 
-**Relaciones:**
- - Un Jugador puede tener múltiples instancias de Tetris (juegoList).
- - Composición con Tablero, Puntuacion y una enumeración Dificultad.
 
-### 3. Tablero
+## 5. Pieza
 
-Representa el tablero de juego donde las piezas se colocan.
-    
-**Atributos:**
-- ancho: Ancho del tablero.
-- alto: Alto del tablero.
-- bloque: Representación de los bloques en el tablero.
-   
-**Métodos:**
-- agregarPieza(): Agrega una nueva pieza al tablero.
-- eliminarLineas(): Elimina las líneas completas del tablero. 
-- finJuego(): Finaliza el juego.
-    
-**Relaciones:**
-- Composición con múltiples instancias de Pieza.
+Representa las piezas del juego que caen en el tablero, controla la creación, el movimiento y la rotación de las piezas.
+## Atributos:
+        posicion: Indica la posición actual de la pieza en el tablero.
+## Métodos:
+        crearPieza(): Genera y devuelve una nueva pieza.
+        mover(): Mueve la pieza en el tablero.
+        rotar(): Rota la pieza.
 
-### 4. Pieza
 
-Representa las piezas que caen en el tablero.
-    
-**Atributos:**
-- bloques: Bloques que conforman la pieza.
-- posicion: Posición actual de la pieza en el tablero.
-- forma: Forma de la pieza.
-- color: Color de la pieza.
-   
-**Métodos:**
-- rotar(): Rota la pieza.
-- moverIzquierda(): Mueve la pieza a la izquierda.
-- moverDerecha(): Mueve la pieza a la derecha.
-- moverAbajo(): Mueve la pieza hacia abajo.
-    
-**Relaciones:**
-- Cada Pieza tiene una Posicion.
+## 6. Sonidos
 
-### 5. Puntuacion
+Controla los efectos de sonido del juego.
+## Atributos:
+        principal: Representa el sonido de fondo principal.
+        lineaBloqueRoto: Representa el sonido al eliminar una fila de bloques.
+        gameOver: Representa el sonido cuando el juego termina.
+## Métodos:
+        cargar(): Carga los archivos de sonido.
+        reproducir(): Reproduce un sonido.
+        pausar(): Pausa el sonido.
+        detener(): Detiene el sonido.
 
-Gestiona la puntuación del juego.
-    
-**Atributos:**
-- puntuacionActual: Puntuación actual durante el juego.
-- puntuacionFinal: Puntuación final del juego.
-    
-**Métodos:**
-- reiniciar(): Reinicia la puntuación.
-- mostrarPuntajeFinal(): Muestra la puntuación final.
 
-### 6. Posicion
+## 7. Puntuacion
 
-Representa la posición (x, y) de una pieza en el tablero.
-    
-**Atributos:**
-- x: Coordenada x de la posición.
-- y: Coordenada y de la posición.
-   
-**Métodos:**
-- establecerPosicion(): Establece la posición de la pieza.
+Controla la puntuación del jugador, calcula y actualiza los puntos basados en las filas eliminadas.
+## Atributos:
+        puntos: Representa los puntos acumulados por el jugador.
+## Métodos:
+        incrementar(): Incrementa la puntuación según las filas eliminadas.
+        resetear(): Restablece la puntuación a cero.
+        actualizar(): Actualiza la puntuación actual.
 
-### 7. Enumeraciones
-Sonidos:
-- SonidoPrincipal 
-- LineaBloquesRoto 
-- GameOver
 
-### 8. Dificultad
+## 8. Posicion
 
-Valores:
-
-- FACIL
-- NORMAL 
-- DIFICIL
+Representa la posición de una pieza en el tablero, con coordenadas x e y.
+## Atributos:
+        x: Coordenada x de la posición.
+        y: Coordenada y de la posición.
+## Métodos:
+        actualizarPosicion(): Actualiza la posición de la pieza en el tablero.
