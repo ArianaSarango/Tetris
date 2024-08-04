@@ -5,7 +5,7 @@
 **Ciclo:** Segundo "A"
 
 # Diagrama UML 
-![Uploading 475a3b31-87f4-4161-8655-acbe1bc8ee55.jfif…]()
+![image](https://github.com/user-attachments/assets/03c8e425-3fdd-43cd-846d-67968008176c)
 
 # GitHub Page
 
