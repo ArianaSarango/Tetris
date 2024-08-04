@@ -46,94 +46,94 @@
 
 Es la clase principal que controla el flujo del juego, maneja la puntuación, el nivel de dificultad, el tablero, las piezas, los sonidos y los controles.
 ## Atributos:
-        puntuacion: Controla los puntos acumulados durante el juego.
-        dificultad: Define el nivel de dificultad actual.
-        tablero: Representa la matriz de juego donde caen las piezas.
-        pieza: Representa la pieza actual en el juego.
-        sonidos: Controla los efectos de sonido del juego.
-        controles: Maneja la entrada del usuario.
+puntuacion: Controla los puntos acumulados durante el juego.
+dificultad: Define el nivel de dificultad actual.
+tablero: Representa la matriz de juego donde caen las piezas.
+pieza: Representa la pieza actual en el juego.
+sonidos: Controla los efectos de sonido del juego.
+controles: Maneja la entrada del usuario.
 ## Métodos:
-        iniciar(): Inicia el juego.
-        pausar(): Pausa el juego.
-        parar(): Detiene el juego.
-        resetear(): Reinicia el juego.
-        mover(): Mueve la pieza actual en el tablero.
-        gameOver(): Maneja el final del juego.
+iniciar(): Inicia el juego.
+pausar(): Pausa el juego.
+parar(): Detiene el juego.
+resetear(): Reinicia el juego.
+mover(): Mueve la pieza actual en el tablero.
+gameOver(): Maneja el final del juego.
 	
  
 ## 2. Dificultad
 
 Esta clase representa los diferentes niveles de dificultad del juego, define la velocidad a la que caen las piezas y el nivel de dificultad actual.
 ## Atributos:
-        nivel: Indica el nivel de dificultad (por ejemplo:"FÁCIL", "NORMAL", "DIFÍCIL").
-        velocidad: Representa la velocidad en la que caen las piezas.
+nivel: Indica el nivel de dificultad (por ejemplo:"FÁCIL", "NORMAL", "DIFÍCIL").
+velocidad: Representa la velocidad en la que caen las piezas.
 ## Métodos:
-        establecerDificultad(): Configura el nivel de dificultad y la velocidad correspondiente.
+establecerDificultad(): Configura el nivel de dificultad y la velocidad correspondiente.
 	
 
 ## 3. Controles
 
 Esta clase se encarga de controlar la interacción del jugador con el juego mediante las teclas.
 ## Atributos:
-        juego: Para acceder al estado del juego.
+juego: Para acceder al estado del juego.
 ## Métodos:
-        pulsarTeclas(): Detecta y maneja las teclas presionadas por el jugador para mover y rotar las piezas.
+pulsarTeclas(): Detecta y maneja las teclas presionadas por el jugador para mover y rotar las piezas.
 
  
 ## 4. Tablero
 
 Representa la matriz de juego donde caen las piezas, controla la creación de la matriz, el dibujo de piezas y la eliminación de filas completas.
 ## Atributos:
-        matriz: Una cadena que representa la disposición actual de las piezas en el tablero.
+matriz: Una cadena que representa la disposición actual de las piezas en el tablero.
 ## Métodos:
-        crearMatriz(): Crea y devuelve una matriz vacía.
-        dibujarPieza(pieza: Pieza): Dibuja la pieza actual en la matriz.
-        limpiarTablero(): Limpia la matriz del tablero.
-        unirPiezas(pieza: Pieza): Une la pieza actual con las piezas ya colocadas en el tablero.
-        eliminarFilas(): Elimina las filas completas de la matriz y ajusta la puntuación.
+crearMatriz(): Crea y devuelve una matriz vacía.
+dibujarPieza(pieza: Pieza): Dibuja la pieza actual en la matriz.
+limpiarTablero(): Limpia la matriz del tablero.
+unirPiezas(pieza: Pieza): Une la pieza actual con las piezas ya colocadas en el tablero.
+eliminarFilas(): Elimina las filas completas de la matriz y ajusta la puntuación.
 
 
 ## 5. Pieza
 
 Representa las piezas del juego que caen en el tablero, controla la creación, el movimiento y la rotación de las piezas.
 ## Atributos:
-        posicion: Indica la posición actual de la pieza en el tablero.
+posicion: Indica la posición actual de la pieza en el tablero.
 ## Métodos:
-        crearPieza(): Genera y devuelve una nueva pieza.
-        mover(): Mueve la pieza en el tablero.
-        rotar(): Rota la pieza.
+crearPieza(): Genera y devuelve una nueva pieza.
+mover(): Mueve la pieza en el tablero.
+rotar(): Rota la pieza.
 
 
 ## 6. Sonidos
 
 Controla los efectos de sonido del juego.
 ## Atributos:
-        principal: Representa el sonido de fondo principal.
-        lineaBloqueRoto: Representa el sonido al eliminar una fila de bloques.
-        gameOver: Representa el sonido cuando el juego termina.
+principal: Representa el sonido de fondo principal.
+lineaBloqueRoto: Representa el sonido al eliminar una fila de bloques.
+gameOver: Representa el sonido cuando el juego termina.
 ## Métodos:
-        cargar(): Carga los archivos de sonido.
-        reproducir(): Reproduce un sonido.
-        pausar(): Pausa el sonido.
-        detener(): Detiene el sonido.
+cargar(): Carga los archivos de sonido.
+reproducir(): Reproduce un sonido.
+pausar(): Pausa el sonido.
+detener(): Detiene el sonido.
 
 
 ## 7. Puntuacion
 
 Controla la puntuación del jugador, calcula y actualiza los puntos basados en las filas eliminadas.
 ## Atributos:
-        puntos: Representa los puntos acumulados por el jugador.
+puntos: Representa los puntos acumulados por el jugador.
 ## Métodos:
-        incrementar(): Incrementa la puntuación según las filas eliminadas.
-        resetear(): Restablece la puntuación a cero.
-        actualizar(): Actualiza la puntuación actual.
+incrementar(): Incrementa la puntuación según las filas eliminadas.
+resetear(): Restablece la puntuación a cero.
+actualizar(): Actualiza la puntuación actual.
 
 
 ## 8. Posicion
 
 Representa la posición de una pieza en el tablero, con coordenadas x e y.
 ## Atributos:
-        x: Coordenada x de la posición.
-        y: Coordenada y de la posición.
+x: Coordenada x de la posición.
+y: Coordenada y de la posición.
 ## Métodos:
-        actualizarPosicion(): Actualiza la posición de la pieza en el tablero.
+actualizarPosicion(): Actualiza la posición de la pieza en el tablero.
