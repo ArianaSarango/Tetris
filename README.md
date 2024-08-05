@@ -9,7 +9,7 @@
 
 # GitHub Page
 
-        https://arianasarango.github.io/Tetris/
+https://arianasarango.github.io/Tetris/
 
 # Instrucciones De Juego
 
@@ -79,7 +79,7 @@ velocidad: Representa la velocidad en la que caen las piezas.
 establecerDificultad(): Configura el nivel de dificultad y la velocidad correspondiente.
 	
 
-## 3. Controles
+## 3. Control
 
 Esta clase se encarga de controlar la interacción del jugador con el juego mediante las teclas.
 
@@ -124,7 +124,7 @@ mover(): Mueve la pieza en el tablero.
 rotar(): Rota la pieza.
 
 
-## 6. Sonidos
+## 6. Sonido
 
 Controla los efectos de sonido del juego.
 
